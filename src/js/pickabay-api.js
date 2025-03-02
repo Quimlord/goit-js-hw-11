@@ -3,7 +3,7 @@ import axios from 'axios';
 export default function fetchImages(searchText) {
   const options = {
     params: {
-      key: '49073944-bcfdbd092af101cb082d3fdde',
+      key: '49142387-370a201ec94f73d63c9116370',
       q: searchText,
       image_type: 'photo',
       orientation: 'horizontal',
