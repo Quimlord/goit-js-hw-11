@@ -4,12 +4,14 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader-box');
-export function renderImages(images) {
-  hideLoader();
-  if (!images.length) {
-    showMessage();
-    return;
-  }
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+
+export function renderImages(images, isNextPage = false) {
+  if (!isNextPage) gallery.innerHTML = '';
+
   const galleryHtml = images
     .map(
       ({
@@ -20,7 +22,7 @@ export function renderImages(images) {
         views,
         comments,
         downloads,
-      }) => `
+      }) => 
           <li class="gallery-item">
             <a class="gallery-link" href="${largeImageURL}">
               <figure class="thumb-container">
@@ -53,16 +55,17 @@ export function renderImages(images) {
               </figure>
             </a>
           </li>
-        `
+        
     )
     .join('');
-  gallery.innerHTML = galleryHtml;
+
+  gallery.insertAdjacentHTML('beforeend', galleryHtml);
   lightbox.refresh();
+
+  if (isNextPage && images.length) {
+    scrollGallery();
+  }
 }
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
 export function showLoader() {
   gallery.classList.add('hidden');
   loader.classList.remove('hidden');
