@@ -1,10 +1,5 @@
 import fetchImages from './js/pickabay-api';
-import {
-  hideLoader,
-  renderImages,
-  showLoader,
-  showMessage,
-} from './js/render-functions';
+import { hideLoader, renderImages, showLoader, showMessage } from './js/render-functions';
 
 const form = document.querySelector('form');
 const input = document.querySelector('#search-text');
@@ -20,7 +15,7 @@ function handleSubmit(e) {
 
   input.value = '';
 
-  showLoader();
+  showLoader()
 
   fetchImages(searchText)
     .then(data => handleSearchResults(data.data.hits))
