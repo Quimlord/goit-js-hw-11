@@ -3,15 +3,8 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 const gallery = document.querySelector('.gallery');
-const loader = document.querySelector('.loader-box');
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
-
-export function renderImages(images, isNextPage = false) {
-  if (!isNextPage) gallery.innerHTML = '';
-
+const loader = document.querySelector('.loader-box')
+export function renderImages(images) {
   const galleryHtml = images
     .map(
       ({
@@ -22,7 +15,7 @@ export function renderImages(images, isNextPage = false) {
         views,
         comments,
         downloads,
-      }) => 
+      }) => `
           <li class="gallery-item">
             <a class="gallery-link" href="${largeImageURL}">
               <figure class="thumb-container">
@@ -55,35 +48,30 @@ export function renderImages(images, isNextPage = false) {
               </figure>
             </a>
           </li>
-        
+        `
     )
     .join('');
-
-  gallery.insertAdjacentHTML('beforeend', galleryHtml);
+  gallery.innerHTML = galleryHtml;
   lightbox.refresh();
-
-  if (isNextPage && images.length) {
-    scrollGallery();
-  }
+  hideLoader()
 }
-export function showLoader() {
-  gallery.classList.add('hidden');
-  loader.classList.remove('hidden');
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+export function showLoader(){
+  gallery.classList.add('hidden')
+  loader.classList.remove('hidden')
 }
-export function hideLoader() {
-  gallery.classList.remove('hidden');
-  loader.classList.add('hidden');
+export function hideLoader(){
+  gallery.classList.remove('hidden')
+  loader.classList.add('hidden')
 }
 export function showMessage() {
-  hideLoader();
-  iziToast.error({
-    position: 'topRight',
-    title: 'Error',
-    message:
-      'Sorry, there are no images matching your search query. Please try again!',
-    backgroundColor: '#EF4040',
-  });
-}
-export function validateQuery(query) {
-  return query.trim();
+    iziToast.error({
+        position: 'topRight',
+        title: 'Error',
+        message: 'Sorry, there are no images matching your search query. Please try again!',
+        backgroundColor: '#EF4040',
+    });
 }
