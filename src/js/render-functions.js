@@ -2,8 +2,12 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+
+
+
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader-box')
+
 export function renderImages(images) {
   const galleryHtml = images
     .map(
@@ -25,6 +29,7 @@ export function renderImages(images) {
                   data-source="${largeImageURL}"
                   alt="${tags}"
                 />
+
                 <figcaption class="thumb-data">
                   <dl class="thumb-data-list">
                     <div class="thumb-data-item">
@@ -51,22 +56,27 @@ export function renderImages(images) {
         `
     )
     .join('');
+
   gallery.innerHTML = galleryHtml;
   lightbox.refresh();
   hideLoader()
 }
+
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
+
 export function showLoader(){
   gallery.classList.add('hidden')
   loader.classList.remove('hidden')
 }
+
 export function hideLoader(){
   gallery.classList.remove('hidden')
   loader.classList.add('hidden')
 }
+
 export function showMessage() {
     iziToast.error({
         position: 'topRight',
