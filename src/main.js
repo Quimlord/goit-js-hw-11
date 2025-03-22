@@ -1,34 +1,61 @@
-import fetchImages from './js/pickabay-api';
-import {
-  hideLoader,
-  renderImages,
-  showLoader,
-  showMessage,
-} from './js/render-functions';
+import axios from 'axios';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const form = document.querySelector('form');
-const input = document.querySelector('#search-text');
+import { fetchPixabay } from './js/pickabay-api';
+import { populateGallery } from './js/render-functions';
+import { clearGallery } from './js/render-functions';
+// import { initializeLightbox } from './js/render-functions';
 
-form.addEventListener('submit', handleSubmit);
+const pixabayRefs = {
+  form: document.querySelector('.form'),
+  searchQueryInput: document.querySelector('.form-input'),
+  imagesContainer: document.querySelector('.gallery'),
+  button: document.querySelector('.form-button'),
+  loader: document.querySelector('.loader'),
+};
 
-function handleSubmit(e) {
-  e.preventDefault();
+pixabayRefs.form.addEventListener('submit', event => {
+  event.preventDefault();
+  const searchQuery = pixabayRefs.searchQueryInput.value.trim();
+  if (!searchQuery) {
+    iziToast.error({
+      messageColor: '#FAFAFB',
+      iconUrl: './img/bi_x-octagon.svg',
+      iconColor: 'white',
+      message: 'Please enter a search word!',
+      position: 'topRight',
+      backgroundColor: '#ef4040',
+      color: '#fafafb',
+    });
+    return;
+  }
+  clearGallery();
 
-  const searchText = input.value;
+  pixabayRefs.loader.style.display = 'inline-block';
 
-  if (!searchText) return;
-
-  input.value = '';
-
-  showLoader();
-
-  fetchImages(searchText)
-    .then(data => handleSearchResults(data.data.hits))
-    .catch(err => console.log(err));
-}
-
-function handleSearchResults(images) {
-  if (!images.length) showMessage();
-
-  renderImages(images);
-}
+  fetchPixabay(searchQuery)
+    .then(response => {
+      if (response.hits.length === 0) {
+        throw new Error('No images found for this query');
+      }
+      populateGallery(response.hits);
+    })
+    .catch(error => {
+      iziToast.error({
+        messageColor: '#FAFAFB',
+        iconUrl: './img/bi_x-octagon.svg',
+        iconColor: 'white',
+        message:
+          'Sorry, there are no images matching</br> your search query. Please, try again!',
+        position: 'topRight',
+        backgroundColor: '#ef4040',
+        color: '#fafafb',
+      });
+    })
+    .finally(() => {
+      pixabayRefs.loader.style.display = 'none';
+    });
+});
