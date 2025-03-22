@@ -4,7 +4,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import { fetchPixabay } from './js/pickabay-api';
+import { fetchPixabay } from './js/pixabay-api';
 import { populateGallery } from './js/render-functions';
 import { clearGallery } from './js/render-functions';
 // import { initializeLightbox } from './js/render-functions';
